@@ -9,6 +9,9 @@ from models.amenity import Amenity
 from models.review import Review
 from models.place import Place
 
+classes = {"Amenity": Amenity, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
+
 
 class DBStorage:
     '''
@@ -43,20 +46,14 @@ class DBStorage:
 
     def all(self, cls=None):
         '''query on the current database session '''
-        classes_ = [User, State, City, Amenity, Review, Place]
-        query = []
-        obj_dict = {}
-        if cls is None:
-            for _class in classes_:
-                query.extend(self.__session.query(_class).all())
-        else: 
-            query = self.__session.query(eval(cls))
-        # the output will be like this:
-        # query = [<User object at 0x7f7f59d31250>, <User object at 0x7f7f59d31590>]
-        for obj in query:
-            key = f"{obj.__class__.__name__}.{obj.id}"
-            obj_dict[key] = obj
-        return obj_dict
+        new_dict = {}
+        for clss in classes:
+            if cls is None or cls is classes[clss] or cls is clss:
+                objs = self.__session.query(classes[clss]).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[key] = obj
+        return (new_dict)
 
     def new(self, obj):
         '''add the object to the current database session 
