@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+""" deine db """
 from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
