@@ -37,7 +37,7 @@ class DBStorage:
         MySQL_host = getenv('HBNB_MYSQL_HOST')
         MySQL_database = getenv('HBNB_MYSQL_DB')
         # Create engine
-        # The string form of the URL is dialect[+driver]://user:password@host/dbname[?key=value..],
+
         self.__engine = create_engine(
             f'mysql+mysqldb://{MySQL_user}:{MySQL_pwd}@{MySQL_host}/{MySQL_database}', pool_pre_ping=True)
         # Get the env variable
@@ -58,15 +58,13 @@ class DBStorage:
         return (new_dict)
 
     def new(self, obj):
-        '''add the object to the current database session 
-        '''
+        '''add the object to the current database session '''
         self.__session.add(obj)
 
-    
     def save(self):
         ''' commit all changes of the current database session'''
         self.__session.commit()
-    
+
     def delete(self, obj=None):
         '''delete from the current database session obj
         '''
@@ -81,12 +79,12 @@ class DBStorage:
         Base.metadata.create_all(bind=self.__engine)
         # open session object to interact with data
         # 1.Session class is defined using sessionmaker()
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(
+                bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         # 2.The session obj is then set up using its default constructor
         self.__session = Session()
-        
-        
+
     def close(self):
         """Close the working session."""
         self.__session.remove()
